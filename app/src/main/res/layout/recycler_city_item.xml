@@ -2,30 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp">
 
     <TextView
         android:id="@+id/city_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Город - [название]"/>
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/city_item_temperature"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Температура - [значение]"/>
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/city_item_wind"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Скорость ветра - [значение]"/>
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/city_item_direction"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Направление ветра - [значение]"/>
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

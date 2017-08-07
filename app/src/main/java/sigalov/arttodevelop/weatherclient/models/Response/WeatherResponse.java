@@ -1,4 +1,4 @@
-package sigalov.arttodevelop.weatherclient.models;
+package sigalov.arttodevelop.weatherclient.models.Response;
 
 public class WeatherResponse {
 

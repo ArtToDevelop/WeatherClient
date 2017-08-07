@@ -15,8 +15,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import sigalov.arttodevelop.weatherclient.data.Storage;
 import sigalov.arttodevelop.weatherclient.helpers.GsonHelper;
-import sigalov.arttodevelop.weatherclient.models.ServerErrorResponse;
-import sigalov.arttodevelop.weatherclient.models.WeatherResponse;
+import sigalov.arttodevelop.weatherclient.models.Response.ServerErrorResponse;
+import sigalov.arttodevelop.weatherclient.models.Response.WeatherResponse;
 
 public class SynchronizationOkHttp {
     private static final String APP_ID = "1f0f2533eafbed171c8fba2865101d39";
@@ -66,7 +66,7 @@ public class SynchronizationOkHttp {
         }
     }
 
-    void request() throws Exception
+    private void request() throws Exception
     {
         Request request = new Request.Builder()
                 .tag(UPDATE_ITEM_REQUEST_TAG)

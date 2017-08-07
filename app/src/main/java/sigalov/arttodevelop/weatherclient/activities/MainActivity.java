@@ -2,13 +2,23 @@ package sigalov.arttodevelop.weatherclient.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+
+import java.util.ArrayList;
 
 import sigalov.arttodevelop.weatherclient.R;
+import sigalov.arttodevelop.weatherclient.adapters.CityRecyclerAdapter;
 import sigalov.arttodevelop.weatherclient.data.DataManager;
+import sigalov.arttodevelop.weatherclient.models.Weather;
 
 public class MainActivity extends AppCompatActivity {
 
     DataManager dataManager;
+
+    private RecyclerView recyclerView;
+    private CityRecyclerAdapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,9 +27,35 @@ public class MainActivity extends AppCompatActivity {
 
         dataManager = DataManager.getInstance();
 
-
         dataManager.testRequest();
 
+        recyclerView = (RecyclerView) findViewById(R.id.main_city_recycler_view);
 
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new CityRecyclerAdapter();
+
+        adapter.setData(getTestItems());
+
+        recyclerView.setAdapter(adapter);
+    }
+
+    private ArrayList<Weather> getTestItems()
+    {
+        ArrayList<Weather> weatherList = new ArrayList<>();
+
+        for(int i = 0; i < 20; i++)
+        {
+            Weather weather1 = new Weather();
+            weather1.setName("Казань_" + i);
+            weather1.setTemp(25.0);
+            weather1.setWindDeg(180.0);
+            weather1.setWindSpeed((double)i);
+
+            weatherList.add(weather1);
+        }
+
+        return weatherList;
     }
 }
