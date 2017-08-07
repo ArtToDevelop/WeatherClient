@@ -6,12 +6,17 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import sigalov.arttodevelop.weatherclient.data.Storage;
+import sigalov.arttodevelop.weatherclient.helpers.GsonHelper;
 import sigalov.arttodevelop.weatherclient.models.ServerErrorResponse;
+import sigalov.arttodevelop.weatherclient.models.WeatherResponse;
 
 public class SynchronizationOkHttp {
     private static final String APP_ID = "1f0f2533eafbed171c8fba2865101d39";
@@ -73,7 +78,7 @@ public class SynchronizationOkHttp {
 
         checkResponse(receivedText, response);
 
-        Log.i("response", receivedText);
+        parseWeatherJson(receivedText);
     }
 
     private void checkResponse(String receivedText, Response response) throws Exception {
@@ -90,4 +95,41 @@ public class SynchronizationOkHttp {
 
         }
     }
+
+    private void parseWeatherJson(String json) throws Exception
+    {
+        JsonElement jsonElement;
+        try {
+            jsonElement = new JsonParser().parse(json);
+        }
+        catch(Exception ex)
+        {
+            throw new Exception(ex.getMessage());
+        }
+
+        if(!jsonElement.isJsonObject())
+            throw new Exception("String is not JsonObject");
+
+        JsonObject jObject = jsonElement.getAsJsonObject();
+        WeatherResponse weatherResponse = getWeatherResponseByJson(jObject);
+
+
+        Log.i("parseWeatherJson", "success");
+    }
+
+    public WeatherResponse getWeatherResponseByJson(@NonNull JsonObject jsonObject) throws Exception
+    {
+        WeatherResponse weatherResponse = new WeatherResponse();
+
+        JsonObject jObjectMain = GsonHelper.getJsonObjectOrThrow(jsonObject, "main");
+        JsonObject jObjectWind = GsonHelper.getJsonObjectOrThrow(jsonObject, "wind");
+
+        weatherResponse.setTemp(GsonHelper.getAsDoubleOrThrow(jObjectMain, "temp"));
+        weatherResponse.setWindSpeed(GsonHelper.getAsDoubleOrThrow(jObjectWind, "speed"));
+        weatherResponse.setWindDeg(GsonHelper.getAsDoubleOrThrow(jObjectWind, "deg"));
+
+        return weatherResponse;
+    }
+
+
 }
