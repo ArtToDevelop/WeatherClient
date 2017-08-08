@@ -15,7 +15,7 @@ import java.util.List;
 import sigalov.arttodevelop.weatherclient.R;
 import sigalov.arttodevelop.weatherclient.adapters.address.AddressAutoCompleteAdapter;
 import sigalov.arttodevelop.weatherclient.adapters.address.AddressAutoCompleteTextView;
-import sigalov.arttodevelop.weatherclient.adapters.address.HintAddress;
+import sigalov.arttodevelop.weatherclient.models.City;
 
 public class AddCityActivity extends AppCompatActivity {
 
@@ -61,21 +61,6 @@ public class AddCityActivity extends AppCompatActivity {
 
         inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 
-
-        //TODO: временно для тестов
-        addressAutoCompleteAdapter.setData(getCities());
-    }
-
-    //TODO: временно для тестов
-    private List<HintAddress> getCities()
-    {
-        List<HintAddress> addressesList = new ArrayList<>();
-        addressesList.add(new HintAddress(0, "Kazan"));
-        addressesList.add(new HintAddress(1, "Kazan1"));
-        addressesList.add(new HintAddress(2, "Kazan2"));
-        addressesList.add(new HintAddress(3, "Kazan3"));
-
-        return addressesList;
     }
 
     @Override

@@ -15,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
+            android:maxLines="1"
             android:background="@drawable/border"/>
 
         <ProgressBar
@@ -22,6 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
+            android:visibility="invisible"
             style="?android:attr/progressBarStyleSmall"/>
     </FrameLayout>
 

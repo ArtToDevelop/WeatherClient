@@ -11,9 +11,14 @@ import java.util.List;
 
 import sigalov.arttodevelop.weatherclient.R;
 import sigalov.arttodevelop.weatherclient.adapters.AutoCompleteBaseAdapter;
+import sigalov.arttodevelop.weatherclient.data.DataManager;
+import sigalov.arttodevelop.weatherclient.models.City;
 
 public class AddressAutoCompleteAdapter extends AutoCompleteBaseAdapter {
-    private List<HintAddress> hintAddressList;
+
+    DataManager dataManager = DataManager.getInstance();
+
+    private List<City> hintAddressList;
 
     public AddressAutoCompleteAdapter(Context context) {
         super(context);
@@ -37,24 +42,27 @@ public class AddressAutoCompleteAdapter extends AutoCompleteBaseAdapter {
     protected List<String> findItems(String itemValue) {
         List<String> result = new ArrayList<>();
 
-        for (HintAddress currentHintAddress : hintAddressList) {
+        hintAddressList = dataManager.getCityList(itemValue);
+
+        if(hintAddressList == null)
+            return new ArrayList<>();
+
+        for (City currentHintAddress : hintAddressList) {
             String hintAddressString = currentHintAddress.getName();
 
             if(hintAddressString.toLowerCase().contains(itemValue.toLowerCase()))
                 result.add(hintAddressString);
         }
 
+        //TODO: запрос на сервер для получения списка городов
+
         return result;
     }
 
-    public void setData(List<HintAddress> hintAddressList)
-    {
-        this.hintAddressList = hintAddressList;
-    }
 
     @Override
     public long getSelectItemIdByStringValue(String valueString) {
-        HintAddress hintAddress = getHintAddressByString(valueString, true);
+        City hintAddress = getHintAddressByString(valueString, true);
 
         if(hintAddress == null)
             return -1;
@@ -67,16 +75,16 @@ public class AddressAutoCompleteAdapter extends AutoCompleteBaseAdapter {
 
     }
 
-    public HintAddress getHintAddressByString(String hintAddressString)
+    public City getHintAddressByString(String hintAddressString)
     {
         return getHintAddressByString(hintAddressString, false);
     }
 
-    private HintAddress getHintAddressByString(String hintAddressString, boolean isExactMatch)
+    private City getHintAddressByString(String hintAddressString, boolean isExactMatch)
     {
-        HintAddress hintAddress = null;
+        City hintAddress = null;
 
-        for(HintAddress currentHintAddress : hintAddressList) {
+        for(City currentHintAddress : hintAddressList) {
             if((!isExactMatch && currentHintAddress.getName().toLowerCase().contains(hintAddressString.toLowerCase()))
                     || (isExactMatch && currentHintAddress.getName().toLowerCase().equals(hintAddressString.toLowerCase()))) {
                 hintAddress = currentHintAddress;

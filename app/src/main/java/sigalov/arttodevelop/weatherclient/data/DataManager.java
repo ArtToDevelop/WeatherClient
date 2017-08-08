@@ -2,9 +2,11 @@ package sigalov.arttodevelop.weatherclient.data;
 
 
 import android.content.Context;
-import android.util.Log;
+
+import java.util.List;
 
 import sigalov.arttodevelop.weatherclient.WeatherClientApplication;
+import sigalov.arttodevelop.weatherclient.models.City;
 import sigalov.arttodevelop.weatherclient.network.SynchronizationOkHttp;
 
 public class DataManager {
@@ -32,6 +34,11 @@ public class DataManager {
 
         synchronization = new SynchronizationOkHttp(storage);
         synchronization.initSync();
+    }
+
+    public List<City> getCityList(String foundCityString)
+    {
+        return synchronization.getCityList(foundCityString);
     }
 
     public void testRequest()

@@ -1,12 +1,11 @@
-package sigalov.arttodevelop.weatherclient.adapters.address;
+package sigalov.arttodevelop.weatherclient.models;
 
 
-public class HintAddress
-{
+public class City {
     private int id;
     private String name;
 
-    public HintAddress(int id, String name)
+    public City(int id, String name)
     {
         this.id = id;
         this.name = name;
