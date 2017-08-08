@@ -1,8 +1,11 @@
 package sigalov.arttodevelop.weatherclient.activities;
 
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,20 +18,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sigalov.arttodevelop.weatherclient.R;
+import sigalov.arttodevelop.weatherclient.adapters.CityRecyclerAdapter;
+import sigalov.arttodevelop.weatherclient.adapters.WeatherRecyclerAdapter;
 import sigalov.arttodevelop.weatherclient.adapters.address.AddressAutoCompleteAdapter;
 import sigalov.arttodevelop.weatherclient.adapters.address.AddressAutoCompleteTextView;
+import sigalov.arttodevelop.weatherclient.data.DataManager;
 import sigalov.arttodevelop.weatherclient.models.City;
 
 public class AddCityActivity extends AppCompatActivity {
 
+    private DataManager dataManager = DataManager.getInstance();
+
     private ProgressBar progressBar;
     private Button addButton;
+
+    private RecyclerView recyclerView;
+    private CityRecyclerAdapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     private AddressAutoCompleteAdapter addressAutoCompleteAdapter;
     private AddressAutoCompleteTextView addressTextView;
 
     private InputMethodManager inputMethodManager;
 
+    private ArrayList<String> cityList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +80,16 @@ public class AddCityActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("addButton", "onClick");
+                addCityInList();
             }
         });
+
+        layoutManager = new LinearLayoutManager(this);
+        adapter = new CityRecyclerAdapter(this);
+
+        recyclerView = (RecyclerView) findViewById(R.id.add_city_recycler_view);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
 
         inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
     }
@@ -83,6 +103,24 @@ public class AddCityActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+    private void addCityInList()
+    {
+        String currentInputText = addressTextView.getText().toString();
+        if (currentInputText.isEmpty() || currentInputText.equals("null"))
+            return;
+
+        if(!dataManager.isCityExists(currentInputText))
+            return;
+
+        if(cityList.contains(currentInputText))
+            return;
+
+        cityList.add(currentInputText);
+        adapter.setData(cityList);
+        adapter.notifyDataSetChanged();
     }
 
     private void hideKeyboardByView(View view)

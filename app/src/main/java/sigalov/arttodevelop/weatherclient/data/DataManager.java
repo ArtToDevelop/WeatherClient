@@ -36,6 +36,22 @@ public class DataManager {
         synchronization.initSync();
     }
 
+    public boolean isCityExists(String cityName)
+    {
+        List<City> cityList = getCityList(cityName);
+
+        boolean result = false;
+
+        for(City currentCity : cityList) {
+            if(currentCity.getName().toLowerCase().equals(cityName.toLowerCase())) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    }
+
     public List<City> getCityList(String foundCityString)
     {
         return synchronization.getCityList(foundCityString);

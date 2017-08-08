@@ -13,7 +13,7 @@ import android.view.View;
 import java.util.ArrayList;
 
 import sigalov.arttodevelop.weatherclient.R;
-import sigalov.arttodevelop.weatherclient.adapters.CityRecyclerAdapter;
+import sigalov.arttodevelop.weatherclient.adapters.WeatherRecyclerAdapter;
 import sigalov.arttodevelop.weatherclient.data.DataManager;
 import sigalov.arttodevelop.weatherclient.models.Weather;
 
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     DataManager dataManager;
 
     private RecyclerView recyclerView;
-    private CityRecyclerAdapter adapter;
+    private WeatherRecyclerAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -36,13 +36,12 @@ public class MainActivity extends AppCompatActivity {
 
         dataManager = DataManager.getInstance();
 
-        recyclerView = (RecyclerView) findViewById(R.id.main_city_recycler_view);
-
         layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        adapter = new CityRecyclerAdapter();
+        adapter = new WeatherRecyclerAdapter();
         adapter.setData(getTestItems());
+
+        recyclerView = (RecyclerView) findViewById(R.id.main_city_recycler_view);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.main_swipe_refresh_layout);
