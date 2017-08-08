@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class AddCityActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private Button addButton, completeButton;
+    private ImageView addLocationImageView;
 
     private RecyclerView recyclerView;
     private CityRecyclerAdapter adapter;
@@ -78,6 +80,14 @@ public class AddCityActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.add_progress_bar);
         addressTextView.setLoadingIndicator(progressBar);
         addressTextView.setAutocompleteDelay(100);
+
+        addLocationImageView = (ImageView) findViewById(R.id.add_location_button);
+        addLocationImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("addLocationImageView", "success");
+            }
+        });
 
         addButton = (Button) findViewById(R.id.add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
