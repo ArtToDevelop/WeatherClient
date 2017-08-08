@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     DataManager dataManager;
 
     private TextView infoTextView;
+    private ProgressBar progressBar;
 
     private RecyclerView recyclerView;
     private WeatherRecyclerAdapter adapter;
@@ -43,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         adapter = new WeatherRecyclerAdapter();
 
         infoTextView = (TextView) findViewById(R.id.main_info_text_view);
+
+        progressBar = (ProgressBar) findViewById(R.id.main_progress_bar);
 
         recyclerView = (RecyclerView) findViewById(R.id.main_city_recycler_view);
         recyclerView.setLayoutManager(layoutManager);
