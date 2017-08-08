@@ -17,4 +17,18 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="DropdownDiseaseItem">
+        <item name="android:paddingLeft">@dimen/dropdown_disease_item_title_padding_left</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/dropdown_disease_item_title</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="DropdownAddressItem">
+        <item name="android:paddingLeft">@dimen/dropdown_address_item_title_padding_left</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/dropdown_address_item_title</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
 </resources>

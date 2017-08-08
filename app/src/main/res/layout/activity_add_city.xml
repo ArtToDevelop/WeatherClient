@@ -6,4 +6,25 @@
     android:layout_height="match_parent"
     tools:context="sigalov.arttodevelop.weatherclient.activities.AddCityActivity">
 
+    <FrameLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content">
+
+        <sigalov.arttodevelop.weatherclient.adapters.address.AddressAutoCompleteTextView
+            android:id="@+id/add_address_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:background="@drawable/border"/>
+
+        <ProgressBar
+            android:id="@+id/add_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            style="?android:attr/progressBarStyleSmall"/>
+    </FrameLayout>
+
+
+
 </android.support.constraint.ConstraintLayout>
