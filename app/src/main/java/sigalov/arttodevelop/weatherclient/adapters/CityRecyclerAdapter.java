@@ -2,7 +2,6 @@ package sigalov.arttodevelop.weatherclient.adapters;
 
 
 import android.content.Context;
-import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -62,7 +59,7 @@ public class CityRecyclerAdapter extends RecyclerView.Adapter<CityRecyclerAdapte
 
     @Override
     public CityRecyclerAdapter.CityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
+
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_city_item, parent, false);
 
@@ -86,12 +83,11 @@ public class CityRecyclerAdapter extends RecyclerView.Adapter<CityRecyclerAdapte
     @Override
     public void onViewDetachedFromWindow(final CityRecyclerAdapter.CityViewHolder holder)
     {
-        ((CityRecyclerAdapter.CityViewHolder)holder).clearAnimation();
+        holder.clearAnimation();
     }
 
     private void setAnimation(View viewToAnimate, int position)
     {
-        // If the bound view wasn't previously displayed on screen, it's animated
         if (position > lastPosition)
         {
             Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
