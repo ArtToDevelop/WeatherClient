@@ -1,7 +1,10 @@
 package sigalov.arttodevelop.weatherclient.models;
 
 
-public class City {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class City implements Parcelable {
     public static final String TableName = "CITY";
 
     private Integer serverId;
@@ -12,6 +15,12 @@ public class City {
     {
         this.serverId = serverId;
         this.name = name;
+    }
+
+    private City(Parcel in) {
+        serverId = in.readInt();
+        id = in.readInt();
+        name = in.readString();
     }
 
     public Integer getServerId() {
@@ -29,4 +38,26 @@ public class City {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(serverId);
+        parcel.writeInt(id);
+        parcel.writeString(name);
+    }
+
+    public static final Parcelable.Creator<City> CREATOR = new Parcelable.Creator<City>() {
+        public City createFromParcel(Parcel in) {
+            return new City(in);
+        }
+
+        public City[] newArray(int size) {
+            return new City[size];
+        }
+    };
 }

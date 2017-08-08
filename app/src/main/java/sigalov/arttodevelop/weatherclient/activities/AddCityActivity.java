@@ -108,6 +108,19 @@ public class AddCityActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if(savedInstanceState != null && savedInstanceState.containsKey("key"))
+        {
+            cityList = savedInstanceState.getParcelableArrayList("key");
+            adapter.setData(cityList);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("key", cityList);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
