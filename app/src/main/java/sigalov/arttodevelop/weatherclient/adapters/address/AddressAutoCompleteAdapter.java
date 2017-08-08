@@ -64,7 +64,7 @@ public class AddressAutoCompleteAdapter extends AutoCompleteBaseAdapter {
         if(hintAddress == null)
             return -1;
 
-        return hintAddress.getId();
+        return hintAddress.getServerId();
     }
 
     @Override

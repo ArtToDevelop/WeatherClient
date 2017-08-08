@@ -1,6 +1,7 @@
 package sigalov.arttodevelop.weatherclient.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -179,7 +180,7 @@ public class AddCityActivity extends AppCompatActivity {
 
         for(City currentCity : cityList)
         {
-            if(currentCity.getId().equals(city.getId()))
+            if(currentCity.getServerId().equals(city.getServerId()))
             {
                 isContains = true;
                 break;
@@ -223,7 +224,7 @@ public class AddCityActivity extends AppCompatActivity {
             return;
         }
 
-        onBackPressed();
+        finish();
     }
 
     private void hideKeyboardByView(View view)
@@ -232,5 +233,26 @@ public class AddCityActivity extends AppCompatActivity {
             return;
 
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(cityList.size() > 0)
+        {
+            AlertDialogHelper.showQuestionDialog(this,
+                    "Внимание",
+                    "Есть несохраненные города. Вы действительно хотите продолжить?",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            AddCityActivity.super.onBackPressed();
+                        }
+                    },
+                    null);
+
+            return;
+        }
+
+        super.onBackPressed();
     }
 }

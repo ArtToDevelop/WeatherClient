@@ -60,11 +60,11 @@ public class DataManager {
 
     public boolean addNewCity(City city) throws Exception
     {
-        Weather weather = synchronization.getWeather(city.getId());
+        Weather weather = synchronization.getWeather(city.getServerId());
         if(weather == null)
             return false;
 
-        weather.setCityId(city.getId());
+        weather.setCityId(city.getServerId());
         weather.setName(city.getName());
 
         //TODO: сохранение в базу
