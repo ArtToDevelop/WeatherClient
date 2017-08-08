@@ -1,6 +1,8 @@
 package sigalov.arttodevelop.weatherclient.models;
 
 public class Weather {
+    public static final String TableName = "WEATHER";
+
     private Integer cityId;
 
     public Integer getCityId() {

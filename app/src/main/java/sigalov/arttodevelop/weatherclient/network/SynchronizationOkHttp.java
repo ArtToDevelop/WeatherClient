@@ -168,9 +168,9 @@ public class SynchronizationOkHttp {
             JSONObject obj = jArr.getJSONObject(i);
 
             String name = obj.getString("name");
-            Integer id = obj.getInt("id");
+            Integer serverId = obj.getInt("id");
 
-            City c = new City(id, name);
+            City c = new City(serverId, name);
 
             cityList.add(c);
         }
