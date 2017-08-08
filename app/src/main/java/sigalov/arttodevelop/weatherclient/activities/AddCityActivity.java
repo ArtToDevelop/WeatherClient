@@ -3,10 +3,12 @@ package sigalov.arttodevelop.weatherclient.activities;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
@@ -20,11 +22,13 @@ import sigalov.arttodevelop.weatherclient.models.City;
 public class AddCityActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
+    private Button addButton;
 
     private AddressAutoCompleteAdapter addressAutoCompleteAdapter;
     private AddressAutoCompleteTextView addressTextView;
 
     private InputMethodManager inputMethodManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +63,15 @@ public class AddCityActivity extends AppCompatActivity {
         addressTextView.setLoadingIndicator(progressBar);
         addressTextView.setAutocompleteDelay(100);
 
-        inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        addButton = (Button) findViewById(R.id.add_button);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("addButton", "onClick");
+            }
+        });
 
+        inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override

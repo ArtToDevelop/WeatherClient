@@ -54,11 +54,8 @@ public class AddressAutoCompleteAdapter extends AutoCompleteBaseAdapter {
                 result.add(hintAddressString);
         }
 
-        //TODO: запрос на сервер для получения списка городов
-
         return result;
     }
-
 
     @Override
     public long getSelectItemIdByStringValue(String valueString) {
