@@ -28,8 +28,8 @@
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical">
 
             <sigalov.arttodevelop.weatherclient.adapters.address.AddressAutoCompleteTextView
                 android:id="@+id/add_address_text_view"
@@ -63,10 +63,46 @@
         android:textStyle="bold"
         android:layout_marginTop="5dp"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/add_city_recycler_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:layout_marginTop="5dp"/>
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/add_city_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="vertical"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"/>
+
+            <Button
+                android:id="@+id/add_complete_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:text="Готово"
+                style="@style/Widget.AppCompat.Button.Colored"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
 </LinearLayout>

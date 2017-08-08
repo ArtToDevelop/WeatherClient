@@ -2,12 +2,17 @@ package sigalov.arttodevelop.weatherclient.adapters;
 
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -24,11 +29,19 @@ public class CityRecyclerAdapter extends RecyclerView.Adapter<CityRecyclerAdapte
     public static class CityViewHolder extends RecyclerView.ViewHolder {
 
         public TextView nameTextView;
+        public ImageView city_delete_button;
 
-        public CityViewHolder(View v) {
-            super(v);
+        public CityViewHolder(View view) {
+            super(view);
 
-            nameTextView = (TextView) v.findViewById(R.id.city_item_name);
+            nameTextView = (TextView) view.findViewById(R.id.city_item_name);
+            city_delete_button = (ImageView) view.findViewById(R.id.city_delete_button);
+            city_delete_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("delete","success");
+                }
+            });
         }
 
         public void clearAnimation()

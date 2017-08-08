@@ -30,7 +30,7 @@ public class AddCityActivity extends AppCompatActivity {
     private DataManager dataManager = DataManager.getInstance();
 
     private ProgressBar progressBar;
-    private Button addButton;
+    private Button addButton, completeButton;
 
     private RecyclerView recyclerView;
     private CityRecyclerAdapter adapter;
@@ -81,6 +81,14 @@ public class AddCityActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addCityInList();
+            }
+        });
+
+        completeButton = (Button) findViewById(R.id.add_complete_button);
+        completeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
