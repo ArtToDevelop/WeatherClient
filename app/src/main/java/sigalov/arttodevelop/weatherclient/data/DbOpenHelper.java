@@ -36,7 +36,6 @@ public class DbOpenHelper extends SQLiteOpenHelper {
                 " 'wind_deg' REAL, " +
                 " FOREIGN KEY(city_id) REFERENCES " + City.TableName + "(id) ON DELETE CASCADE);");
 
-        Log.i("onCreate", "success");
     }
 
     @Override
