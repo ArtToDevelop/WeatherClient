@@ -1,5 +1,6 @@
 package sigalov.arttodevelop.weatherclient.activities;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
     private CityRecyclerAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,18 +31,31 @@ public class MainActivity extends AppCompatActivity {
 
         dataManager = DataManager.getInstance();
 
-        dataManager.testRequest();
-
         recyclerView = (RecyclerView) findViewById(R.id.main_city_recycler_view);
 
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new CityRecyclerAdapter();
-
         adapter.setData(getTestItems());
-
         recyclerView.setAdapter(adapter);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.main_swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+
+            }
+        });
+
+        swipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+        dataManager.testRequest();
     }
 
     private ArrayList<Weather> getTestItems()
