@@ -24,8 +24,8 @@ import okhttp3.Response;
 import sigalov.arttodevelop.weatherclient.data.Storage;
 import sigalov.arttodevelop.weatherclient.helpers.GsonHelper;
 import sigalov.arttodevelop.weatherclient.models.City;
-import sigalov.arttodevelop.weatherclient.models.Response.ServerErrorResponse;
-import sigalov.arttodevelop.weatherclient.models.Response.WeatherResponse;
+import sigalov.arttodevelop.weatherclient.models.serverResponse.ServerErrorResponse;
+import sigalov.arttodevelop.weatherclient.models.Weather;
 
 public class SynchronizationOkHttp {
     private static final String APP_ID = "1f0f2533eafbed171c8fba2865101d39";
@@ -65,7 +65,7 @@ public class SynchronizationOkHttp {
     public List<City> getCityList(String foundCityString)
     {
         try {
-            return new CityRequestTask(foundCityString).execute().get();
+            return new CityListRequestTask(foundCityString).execute().get();
         }
         catch (Exception ex)
         {
@@ -73,30 +73,39 @@ public class SynchronizationOkHttp {
         }
     }
 
-    public void testRequest()
+    public Weather getWeather(Integer cityId) throws Exception
     {
-        new TestRequestTask().execute();
+       return new WeatherRequestTask(cityId).execute().get();
     }
 
-    private class TestRequestTask extends AsyncTask<Void, Void, Void> {
+    private class WeatherRequestTask extends AsyncTask<Void, Void, Weather> {
+
+        Integer cityId;
+
+        public WeatherRequestTask(Integer cityId)
+        {
+            this.cityId = cityId;
+        }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Weather doInBackground(Void... params) {
+            Weather weather = null;
+
             try {
-                request();
+                weather = getWeatherRequest(cityId);
             } catch (Exception ex) {
-                Log.e("SyncError", "doInBackground: ", ex);
+                Log.e("CityListRequestTask", "doInBackground: ", ex);
             }
 
-            return null;
+            return weather;
         }
     }
 
-    private class CityRequestTask extends AsyncTask<Void, Void, List<City>> {
+    private class CityListRequestTask extends AsyncTask<Void, Void, List<City>> {
 
         String foundCityString;
 
-        public CityRequestTask(String foundCityString)
+        public CityListRequestTask(String foundCityString)
         {
             this.foundCityString = foundCityString;
         }
@@ -109,18 +118,18 @@ public class SynchronizationOkHttp {
                 cityList = getCityListRequest(foundCityString);
 
             } catch (Exception ex) {
-                Log.e("CityRequest", "doInBackground: ", ex);
+                Log.e("CityRequestTask", "doInBackground: ", ex);
             }
 
             return cityList;
         }
     }
 
-    private void request() throws Exception
+    private Weather getWeatherRequest(Integer cityId) throws Exception
     {
         Request request = new Request.Builder()
                 .tag(UPDATE_ITEM_REQUEST_TAG)
-                .url(getWeatherApiUrl(String.format("?q=%s", "London")))
+                .url(getWeatherApiUrl(String.format("?id=%s", cityId)))
                 .build();
 
         Response response = client.newCall(request).execute();
@@ -128,7 +137,7 @@ public class SynchronizationOkHttp {
 
         checkResponse(receivedText, response);
 
-        parseWeatherJson(receivedText);
+        return getWeatherByJson(receivedText);
     }
 
     private List<City> getCityListRequest(String foundCityString) throws Exception
@@ -208,7 +217,7 @@ public class SynchronizationOkHttp {
         }
     }
 
-    private void parseWeatherJson(String json) throws Exception
+    private Weather getWeatherByJson(String json) throws Exception
     {
         JsonElement jsonElement;
         try {
@@ -223,16 +232,14 @@ public class SynchronizationOkHttp {
             throw new Exception("String is not JsonObject");
 
         JsonObject jObject = jsonElement.getAsJsonObject();
-        WeatherResponse weatherResponse = getWeatherResponseByJson(jObject);
 
-
-        Log.i("parseWeatherJson", "success");
+        return getWeatherResponseByJson(jObject);
     }
 
 
-    public WeatherResponse getWeatherResponseByJson(@NonNull JsonObject jsonObject) throws Exception
+    public Weather getWeatherResponseByJson(@NonNull JsonObject jsonObject) throws Exception
     {
-        WeatherResponse weatherResponse = new WeatherResponse();
+        Weather weatherResponse = new Weather();
 
         JsonObject jObjectMain = GsonHelper.getJsonObjectOrThrow(jsonObject, "main");
         JsonObject jObjectWind = GsonHelper.getJsonObjectOrThrow(jsonObject, "wind");

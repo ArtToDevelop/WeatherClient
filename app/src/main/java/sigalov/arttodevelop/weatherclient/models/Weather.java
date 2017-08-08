@@ -1,6 +1,16 @@
 package sigalov.arttodevelop.weatherclient.models;
 
 public class Weather {
+    private Integer cityId;
+
+    public Integer getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
+    }
+
     private String name;
 
     public String getName() {

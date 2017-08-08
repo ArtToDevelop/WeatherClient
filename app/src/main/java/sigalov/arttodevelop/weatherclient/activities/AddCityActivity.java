@@ -23,6 +23,8 @@ import sigalov.arttodevelop.weatherclient.adapters.WeatherRecyclerAdapter;
 import sigalov.arttodevelop.weatherclient.adapters.address.AddressAutoCompleteAdapter;
 import sigalov.arttodevelop.weatherclient.adapters.address.AddressAutoCompleteTextView;
 import sigalov.arttodevelop.weatherclient.data.DataManager;
+import sigalov.arttodevelop.weatherclient.helpers.AlertDialogHelper;
+import sigalov.arttodevelop.weatherclient.interfaces.OnCityDeleteListener;
 import sigalov.arttodevelop.weatherclient.models.City;
 
 public class AddCityActivity extends AppCompatActivity {
@@ -41,7 +43,7 @@ public class AddCityActivity extends AppCompatActivity {
 
     private InputMethodManager inputMethodManager;
 
-    private ArrayList<String> cityList = new ArrayList<>();
+    private ArrayList<City> cityList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +82,7 @@ public class AddCityActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addCityInList();
+                addCity();
             }
         });
 
@@ -88,12 +90,17 @@ public class AddCityActivity extends AppCompatActivity {
         completeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                saveCityList();
             }
         });
 
         layoutManager = new LinearLayoutManager(this);
-        adapter = new CityRecyclerAdapter(this);
+        adapter = new CityRecyclerAdapter(this, new OnCityDeleteListener() {
+            @Override
+            public void onDeleteCity(City city) {
+                deleteCity(city);
+            }
+        });
 
         recyclerView = (RecyclerView) findViewById(R.id.add_city_recycler_view);
         recyclerView.setLayoutManager(layoutManager);
@@ -113,22 +120,110 @@ public class AddCityActivity extends AppCompatActivity {
         }
     }
 
-
-    private void addCityInList()
+    private void addCity()
     {
         String currentInputText = addressTextView.getText().toString();
-        if (currentInputText.isEmpty() || currentInputText.equals("null"))
+        if (currentInputText.isEmpty() || currentInputText.equals("null")) {
+            AlertDialogHelper.showWarningDialog(this, "Внимание", "Необходимо ввести город!");
+            return;
+        }
+
+        City foundCity = dataManager.getCityByString(currentInputText);
+
+        if(foundCity == null) {
+            AlertDialogHelper.showWarningDialog(this, "Внимание", "Введенный город не найден!");
+            return;
+        }
+
+        if(isCityContainInList(foundCity)) {
+            AlertDialogHelper.showWarningDialog(this, "Внимание", "Введенный город уже есть в списке!");
+            return;
+        }
+
+        addressTextView.setText("");
+
+        cityList.add(foundCity);
+        updateAdapter();
+    }
+
+    private void deleteCity(City city)
+    {
+        City deleteCity = getCityOfList(city);
+
+        if(deleteCity == null)
             return;
 
-        if(!dataManager.isCityExists(currentInputText))
-            return;
+        cityList.remove(deleteCity);
+        updateAdapter();
+    }
 
-        if(cityList.contains(currentInputText))
-            return;
+    private City getCityOfList(City city)
+    {
+        City foundCity = null;
 
-        cityList.add(currentInputText);
+        for(City currentCity : cityList)
+        {
+            if(currentCity.equals(city))
+            {
+                foundCity = currentCity;
+                break;
+            }
+        }
+
+        return foundCity;
+    }
+
+    private boolean isCityContainInList(City city)
+    {
+        boolean isContains = false;
+
+        for(City currentCity : cityList)
+        {
+            if(currentCity.getId().equals(city.getId()))
+            {
+                isContains = true;
+                break;
+            }
+        }
+
+        return isContains;
+    }
+
+    private void updateAdapter()
+    {
         adapter.setData(cityList);
         adapter.notifyDataSetChanged();
+    }
+
+    private void saveCityList()
+    {
+        if(cityList.size() == 0)
+        {
+            AlertDialogHelper.showWarningDialog(this, "Внимание", "Должен быть добавлен хотя бы один город!");
+            return;
+        }
+
+        List<City> newCityList = new ArrayList<>(cityList);
+        for(City currentCity : newCityList)
+        {
+            try {
+                if(dataManager.addNewCity(currentCity))
+                    deleteCity(currentCity);
+            }
+            catch (Exception ex)
+            {
+                Log.e("saveCityList", ex.getMessage());
+            }
+        }
+
+        if(cityList.size() != 0)
+        {
+            AlertDialogHelper.showWarningDialog(this,
+                    "Внимание", "Не удалось сохранить некоторые города. Попробуйте повторить операцию позднее");
+            return;
+        }
+
+        onBackPressed();
     }
 
     private void hideKeyboardByView(View view)

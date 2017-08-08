@@ -7,6 +7,7 @@ import java.util.List;
 
 import sigalov.arttodevelop.weatherclient.WeatherClientApplication;
 import sigalov.arttodevelop.weatherclient.models.City;
+import sigalov.arttodevelop.weatherclient.models.Weather;
 import sigalov.arttodevelop.weatherclient.network.SynchronizationOkHttp;
 
 public class DataManager {
@@ -36,20 +37,20 @@ public class DataManager {
         synchronization.initSync();
     }
 
-    public boolean isCityExists(String cityName)
+    public City getCityByString(String cityName)
     {
         List<City> cityList = getCityList(cityName);
 
-        boolean result = false;
+        City foundCity = null;
 
         for(City currentCity : cityList) {
             if(currentCity.getName().toLowerCase().equals(cityName.toLowerCase())) {
-                result = true;
+                foundCity = currentCity;
                 break;
             }
         }
 
-        return result;
+        return foundCity;
     }
 
     public List<City> getCityList(String foundCityString)
@@ -57,8 +58,20 @@ public class DataManager {
         return synchronization.getCityList(foundCityString);
     }
 
-    public void testRequest()
+    public boolean addNewCity(City city) throws Exception
     {
-        synchronization.testRequest();
+        Weather weather = synchronization.getWeather(city.getId());
+        if(weather == null)
+            return false;
+
+        weather.setCityId(city.getId());
+        weather.setName(city.getName());
+
+        //TODO: сохранение в базу
+        //.....
+
+
+
+        return true;
     }
 }

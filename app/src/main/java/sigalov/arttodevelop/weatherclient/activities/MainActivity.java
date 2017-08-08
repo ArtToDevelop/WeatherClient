@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
         layoutManager = new LinearLayoutManager(this);
         adapter = new WeatherRecyclerAdapter();
-        adapter.setData(getTestItems());
 
         recyclerView = (RecyclerView) findViewById(R.id.main_city_recycler_view);
         recyclerView.setLayoutManager(layoutManager);
@@ -66,26 +65,6 @@ public class MainActivity extends AppCompatActivity {
                 goToAddCityActivity();
             }
         });
-
-        dataManager.testRequest();
-    }
-
-    private ArrayList<Weather> getTestItems()
-    {
-        ArrayList<Weather> weatherList = new ArrayList<>();
-
-        for(int i = 0; i < 20; i++)
-        {
-            Weather weather1 = new Weather();
-            weather1.setName("Казань_" + i);
-            weather1.setTemp(25.0);
-            weather1.setWindDeg(180.0);
-            weather1.setWindSpeed((double)i);
-
-            weatherList.add(weather1);
-        }
-
-        return weatherList;
     }
 
     private void goToAddCityActivity()

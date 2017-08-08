@@ -1,4 +1,4 @@
-package sigalov.arttodevelop.weatherclient.models.Response;
+package sigalov.arttodevelop.weatherclient.models.serverResponse;
 
 public class ServerErrorResponse {
 

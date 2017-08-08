@@ -15,13 +15,17 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import sigalov.arttodevelop.weatherclient.R;
+import sigalov.arttodevelop.weatherclient.interfaces.OnCityDeleteListener;
+import sigalov.arttodevelop.weatherclient.models.City;
 
 public class CityRecyclerAdapter extends RecyclerView.Adapter<CityRecyclerAdapter.CityViewHolder> {
 
     private Context context;
-    private ArrayList<String> dataList;
+    private ArrayList<City> cityList;
 
     private int lastPosition = -1;
+
+    private OnCityDeleteListener listener;
 
     public static class CityViewHolder extends RecyclerView.ViewHolder {
 
@@ -33,28 +37,31 @@ public class CityRecyclerAdapter extends RecyclerView.Adapter<CityRecyclerAdapte
 
             nameTextView = (TextView) view.findViewById(R.id.city_item_name);
             city_delete_button = (ImageView) view.findViewById(R.id.city_delete_button);
+        }
+
+        public void bind(final City city, final OnCityDeleteListener listener) {
+            nameTextView.setText(city.getName());
             city_delete_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("delete","success");
+                    listener.onDeleteCity(city);
                 }
             });
         }
 
-        public void clearAnimation()
-        {
+        public void clearAnimation() {
             nameTextView.getRootView().clearAnimation();
         }
     }
 
-    public CityRecyclerAdapter(Context context) {
-        dataList = new ArrayList<>();
+    public CityRecyclerAdapter(Context context, OnCityDeleteListener listener) {
+        cityList = new ArrayList<>();
         this.context = context;
+        this.listener = listener;
     }
 
-    public void setData(ArrayList<String> dataList)
-    {
-        this.dataList = dataList;
+    public void setData(ArrayList<City> cityList) {
+        this.cityList = cityList;
     }
 
     @Override
@@ -68,28 +75,24 @@ public class CityRecyclerAdapter extends RecyclerView.Adapter<CityRecyclerAdapte
 
     @Override
     public void onBindViewHolder(CityRecyclerAdapter.CityViewHolder holder, int position) {
-        String item = dataList.get(position);
-
-        holder.nameTextView.setText(item);
+        City city = cityList.get(position);
+        holder.bind(city, listener);
 
         setAnimation(holder.itemView, position);
     }
 
     @Override
     public int getItemCount() {
-        return dataList.size();
+        return cityList.size();
     }
 
     @Override
-    public void onViewDetachedFromWindow(final CityRecyclerAdapter.CityViewHolder holder)
-    {
+    public void onViewDetachedFromWindow(final CityRecyclerAdapter.CityViewHolder holder) {
         holder.clearAnimation();
     }
 
-    private void setAnimation(View viewToAnimate, int position)
-    {
-        if (position > lastPosition)
-        {
+    private void setAnimation(View viewToAnimate, int position) {
+        if (position > lastPosition) {
             Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
