@@ -1,5 +1,6 @@
 package sigalov.arttodevelop.weatherclient.activities;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("addButton", "onClick");
+                goToAddCityActivity();
             }
         });
 
@@ -86,5 +87,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return weatherList;
+    }
+
+    private void goToAddCityActivity()
+    {
+        Intent intent = new Intent(this, AddCityActivity.class);
+        startActivity(intent);
     }
 }
