@@ -75,7 +75,7 @@ public class AddCityActivity extends AppCompatActivity {
         addressesList.add(new HintAddress(2, "Kazan2"));
         addressesList.add(new HintAddress(3, "Kazan3"));
 
-        return null;
+        return addressesList;
     }
 
     @Override
