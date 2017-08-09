@@ -11,4 +11,15 @@
     <string name="add_city_dialog_message_save">Не удалось сохранить некоторые города. Попробуйте повторить операцию позднее</string>
     <string name="add_city_question_not_save">Есть несохраненные города. Вы действительно хотите продолжить?</string>
 
+    <string name="weather_item_name">Температура - %.0f °C</string>
+    <string name="weather_item_direction">Направление ветра - %s</string>
+    <string name="weather_item_speed">Скорость ветра - %.0f м/с</string>
+    <string name="weather_direction_angle_0_45">северный</string>
+    <string name="weather_direction_angle_45_60">северо-восточный</string>
+    <string name="weather_direction_angle_90_135">восточный</string>
+    <string name="weather_direction_angle_135_180">юго-восточный</string>
+    <string name="weather_direction_angle_180_225">южный</string>
+    <string name="weather_direction_angle_225_270">юго-западный</string>
+    <string name="weather_direction_angle_270_315">западный</string>
+    <string name="weather_direction_angle_315">северо-западный</string>
 </resources>

@@ -1,5 +1,6 @@
 package sigalov.arttodevelop.weatherclient.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import sigalov.arttodevelop.weatherclient.models.Weather;
 
 public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecyclerAdapter.WeatherViewHolder> {
 
+    private Context context;
     private List<Weather> dataList;
 
     private OnWeatherDeleteListener listener;
@@ -44,12 +46,22 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
             deleteButton = (ImageButton) v.findViewById(R.id.weather_delete_button);
         }
 
-        public void bind(final Weather weather, final OnWeatherDeleteListener listener) {
+        public void bind(Context context, final Weather weather, final OnWeatherDeleteListener listener) {
             nameTextView.setText(weather.getName());
             dataTextView.setText(utcToLocalTime(weather.getDateRefresh()));
-            temperatureTextView.setText(String.format(Locale.getDefault(), "Температура - %.0f °C", getCelciusByKelvinValue(weather.getTemp())));
-            directionTextView.setText(String.format("Направление ветра - %s", getStringByWindDeg(weather.getWindDeg())));
-            windTextView.setText(String.format(Locale.getDefault(), "Скорость ветра - %.0f м/с", weather.getWindSpeed()));
+
+            temperatureTextView.setText(String.format(Locale.getDefault(),
+                            context.getResources().getString(R.string.weather_item_name),
+                            getCelciusByKelvinValue(weather.getTemp())));
+
+            directionTextView.setText(String.format(
+                    context.getResources().getString(R.string.weather_item_direction),
+                    getStringByWindDeg(context, weather.getWindDeg())));
+
+            windTextView.setText(String.format(Locale.getDefault(),
+                    context.getResources().getString(R.string.weather_item_speed),
+                    weather.getWindSpeed()));
+
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -72,40 +84,41 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
             return kelvin - 273.15;
         }
 
-        private String getStringByWindDeg(Double windDeg)
+        private String getStringByWindDeg(Context context, Double windDeg)
         {
             String degString = windDeg.toString();
 
             if(windDeg >= 0 && windDeg < 45)
-                return "северный";
+                return context.getResources().getString(R.string.weather_direction_angle_0_45);
 
             if(windDeg >= 45 && windDeg < 90)
-                return "северо-восточный";
+                return context.getResources().getString(R.string.weather_direction_angle_45_60);
 
             if(windDeg >= 90 && windDeg < 135)
-                return "восточный";
+                return context.getResources().getString(R.string.weather_direction_angle_90_135);
 
             if(windDeg >= 135 && windDeg < 180)
-                return "юго-восточный";
+                return context.getResources().getString(R.string.weather_direction_angle_135_180);
 
             if(windDeg >= 180 && windDeg < 225)
-                return "южный";
+                return context.getResources().getString(R.string.weather_direction_angle_180_225);
 
             if(windDeg >= 225 && windDeg < 270)
-                return "юго-западный";
+                return context.getResources().getString(R.string.weather_direction_angle_225_270);
 
             if(windDeg >= 270 && windDeg < 315)
-                return "западный";
+                return context.getResources().getString(R.string.weather_direction_angle_270_315);
 
             if(windDeg >= 315)
-                return "северо-западный";
+                return context.getResources().getString(R.string.weather_direction_angle_315);
 
             return degString;
         }
     }
 
-    public WeatherRecyclerAdapter(OnWeatherDeleteListener listener) {
+    public WeatherRecyclerAdapter(Context context, OnWeatherDeleteListener listener) {
         dataList = new ArrayList<>();
+        this.context = context;
         this.listener = listener;
     }
 
@@ -126,7 +139,7 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
     @Override
     public void onBindViewHolder(WeatherRecyclerAdapter.WeatherViewHolder holder, int position) {
         Weather weather = dataList.get(position);
-        holder.bind(weather, listener);
+        holder.bind(context, weather, listener);
     }
 
     @Override

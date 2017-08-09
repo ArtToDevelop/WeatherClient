@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnProgressSyncCha
         dataManager = DataManager.getInstance();
 
         layoutManager = new LinearLayoutManager(this);
-        adapter = new WeatherRecyclerAdapter(new OnWeatherDeleteListener() {
+        adapter = new WeatherRecyclerAdapter(this, new OnWeatherDeleteListener() {
             @Override
             public void onWeatherDelete(Weather weather) {
                 deleteWeather(weather);
