@@ -1,4 +1,4 @@
-package sigalov.arttodevelop.weatherclient.adapters.address;
+package sigalov.arttodevelop.weatherclient.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

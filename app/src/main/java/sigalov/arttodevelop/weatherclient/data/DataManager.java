@@ -76,7 +76,7 @@ public class DataManager {
 
     public List<City> getCityListFromServer(String foundCityString)
     {
-        return synchronization.getCityList(foundCityString);
+        return synchronization.getCityListFromServer(foundCityString);
     }
 
     public List<City> getAllCityLocalList() {

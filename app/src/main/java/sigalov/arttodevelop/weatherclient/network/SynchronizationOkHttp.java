@@ -30,11 +30,12 @@ import sigalov.arttodevelop.weatherclient.models.Weather;
 public class SynchronizationOkHttp {
     private static final String APP_ID = "1f0f2533eafbed171c8fba2865101d39";
 
+    private static final String UPDATE_ITEM_REQUEST_TAG = "weatherRequest";
+
     private static final String BASE_URI = "http://api.openweathermap.org";
     private static final String API_WEATHER = "data/2.5/weather";
     private static final String API_CITIES = "data/2.5/find";
 
-    private static final String UPDATE_ITEM_REQUEST_TAG = "weatherRequest";
     private static final String SUCCESS_CODE = "200";
     private static final String UNAUTHORIZED_ERROR_CODE = "401";
 
@@ -54,15 +55,7 @@ public class SynchronizationOkHttp {
         return new OkHttpClient.Builder().build();
     }
 
-    private static String getWeatherApiUrl(String relativeUrl) {
-        return String.format("%s/%s%s&appid=%s", BASE_URI, API_WEATHER, relativeUrl, APP_ID);
-    }
-
-    private static String getCityApiUrl(String foundCityString) {
-        return String.format("%s/%s%s&appid=%s", BASE_URI, API_CITIES, foundCityString, APP_ID);
-    }
-
-    public List<City> getCityList(String foundCityString)
+    public List<City> getCityListFromServer(String foundCityString)
     {
         try {
             return new CityListRequestTask(foundCityString).execute().get();
@@ -78,37 +71,44 @@ public class SynchronizationOkHttp {
         return new CityRequestTask(longitude, latitude).execute().get();
     }
 
-    public Weather getWeather(String cityId)
+    private City getCityByLongLat(double longitude, double latitude) throws Exception
     {
-        Weather weather = null;
+        Request request = new Request.Builder()
+                .tag(UPDATE_ITEM_REQUEST_TAG)
+                .url(getCityApiUrl(String.format("?lat=%s&lon=%s", latitude, longitude)))
+                .build();
 
-        try {
-            weather = getWeatherRequest(cityId);
-        } catch (Exception ex) {
-            Log.e("getWeather", "error: ", ex);
-        }
+        Response response = client.newCall(request).execute();
+        String receivedText = response.body().string();
 
-        return weather;
+        checkResponse(receivedText, response);
+
+        List<City> cityList = getCityListByStringJson(receivedText);
+
+        return (cityList != null && cityList.size() > 0) ? cityList.get(0) : null;
     }
 
-    public Weather getWeatherAsync(String cityId) throws Exception
-    {
-       return new WeatherRequestTask(cityId).execute().get();
-    }
+    private class CityListRequestTask extends AsyncTask<Void, Void, List<City>> {
 
-    private class WeatherRequestTask extends AsyncTask<Void, Void, Weather> {
+        String foundCityString;
 
-        String cityId;
-
-        public WeatherRequestTask(String cityId)
+        public CityListRequestTask(String foundCityString)
         {
-            this.cityId = cityId;
+            this.foundCityString = foundCityString;
         }
 
         @Override
-        protected Weather doInBackground(Void... params) {
+        protected List<City> doInBackground(Void... params) {
+            List<City> cityList = new ArrayList<>();
 
-            return getWeather(cityId);
+            try {
+                cityList = getCityListRequest(foundCityString);
+
+            } catch (Exception ex) {
+                Log.e("CityRequestTask", "doInBackground: ", ex);
+            }
+
+            return cityList;
         }
     }
 
@@ -136,28 +136,46 @@ public class SynchronizationOkHttp {
         }
     }
 
-    private class CityListRequestTask extends AsyncTask<Void, Void, List<City>> {
+    public Weather getWeather(String cityId)
+    {
+        Weather weather = null;
 
-        String foundCityString;
+        try {
+            weather = getWeatherRequest(cityId);
+        } catch (Exception ex) {
+            Log.e("getWeather", "error: ", ex);
+        }
 
-        public CityListRequestTask(String foundCityString)
+        return weather;
+    }
+
+    public Weather getWeatherAsync(String cityId) throws Exception
+    {
+        return new WeatherRequestTask(cityId).execute().get();
+    }
+
+    private class WeatherRequestTask extends AsyncTask<Void, Void, Weather> {
+
+        String cityId;
+
+        public WeatherRequestTask(String cityId)
         {
-            this.foundCityString = foundCityString;
+            this.cityId = cityId;
         }
 
         @Override
-        protected List<City> doInBackground(Void... params) {
-            List<City> cityList = new ArrayList<>();
+        protected Weather doInBackground(Void... params) {
 
-            try {
-                cityList = getCityListRequest(foundCityString);
-
-            } catch (Exception ex) {
-                Log.e("CityRequestTask", "doInBackground: ", ex);
-            }
-
-            return cityList;
+            return getWeather(cityId);
         }
+    }
+
+    private static String getWeatherApiUrl(String relativeUrl) {
+        return String.format("%s/%s%s&appid=%s", BASE_URI, API_WEATHER, relativeUrl, APP_ID);
+    }
+
+    private static String getCityApiUrl(String foundCityString) {
+        return String.format("%s/%s%s&appid=%s", BASE_URI, API_CITIES, foundCityString, APP_ID);
     }
 
     private Weather getWeatherRequest(String cityId) throws Exception
@@ -173,23 +191,6 @@ public class SynchronizationOkHttp {
         checkResponse(receivedText, response);
 
         return getWeatherByJson(receivedText);
-    }
-
-    private City getCityByLongLat(double longitude, double latitude) throws Exception
-    {
-        Request request = new Request.Builder()
-                .tag(UPDATE_ITEM_REQUEST_TAG)
-                .url(getCityApiUrl(String.format("?lat=%s&lon=%s", latitude, longitude)))
-                .build();
-
-        Response response = client.newCall(request).execute();
-        String receivedText = response.body().string();
-
-        checkResponse(receivedText, response);
-
-        List<City> cityList = getCityListByStringJson(receivedText);
-
-        return (cityList != null && cityList.size() > 0) ? cityList.get(0) : null;
     }
 
     private List<City> getCityListRequest(String foundCityString) throws Exception
@@ -233,7 +234,7 @@ public class SynchronizationOkHttp {
         return cityList;
     }
 
-    public void removeDuplicates(List<City> cityList) {
+    private void removeDuplicates(List<City> cityList) {
         final List<String> usedNames = new ArrayList<>();
 
         Iterator<City> it = cityList.iterator();
@@ -248,7 +249,6 @@ public class SynchronizationOkHttp {
                 usedNames.add(name);
             }
         }
-
     }
 
     private void checkResponse(String receivedText, Response response) throws Exception {
