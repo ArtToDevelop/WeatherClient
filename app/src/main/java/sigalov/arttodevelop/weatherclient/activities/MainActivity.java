@@ -2,6 +2,7 @@ package sigalov.arttodevelop.weatherclient.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -136,8 +137,8 @@ public class MainActivity extends AppCompatActivity implements OnProgressSyncCha
 
     private void deleteWeather(final Weather weather)
     {
-        AlertDialogHelper.showQuestionDialog(this, "Внимание",
-                String.format("Вы действительно хотите удалить город - %s", weather.getName()),
+        AlertDialogHelper.showQuestionDialog(this, getResources().getString(R.string.main_dialog_warning_title),
+                String.format(getResources().getString(R.string.main_question_delete_city), weather.getName()),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

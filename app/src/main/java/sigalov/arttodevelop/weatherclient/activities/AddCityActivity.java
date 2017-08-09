@@ -150,19 +150,25 @@ public class AddCityActivity extends AppCompatActivity {
     {
         String currentInputText = addressTextView.getText().toString();
         if (currentInputText.isEmpty() || currentInputText.equals("null")) {
-            AlertDialogHelper.showWarningDialog(this, "Внимание", "Необходимо ввести город!");
+            AlertDialogHelper.showWarningDialog(this,
+                    getResources().getString(R.string.main_dialog_warning_title),
+                    getResources().getString(R.string.add_city_dialog_message_empty));
             return;
         }
 
         City foundCity = dataManager.getCityByString(currentInputText);
 
         if(foundCity == null) {
-            AlertDialogHelper.showWarningDialog(this, "Внимание", "Введенный город не найден!");
+            AlertDialogHelper.showWarningDialog(this,
+                    getResources().getString(R.string.main_dialog_warning_title),
+                    getResources().getString(R.string.add_city_dialog_message_found));
             return;
         }
 
         if(isCityContainInList(foundCity)) {
-            AlertDialogHelper.showWarningDialog(this, "Внимание", "Введенный город уже есть в списке!");
+            AlertDialogHelper.showWarningDialog(this,
+                    getResources().getString(R.string.main_dialog_warning_title),
+                    getResources().getString(R.string.add_city_dialog_message_exists));
             return;
         }
 
@@ -225,7 +231,9 @@ public class AddCityActivity extends AppCompatActivity {
     {
         if(cityList.size() == 0)
         {
-            AlertDialogHelper.showWarningDialog(this, "Внимание", "Должен быть добавлен хотя бы один город!");
+            AlertDialogHelper.showWarningDialog(this,
+                    getResources().getString(R.string.main_dialog_warning_title),
+                    getResources().getString(R.string.add_city_dialog_message_empty_list));
             return;
         }
 
@@ -245,7 +253,8 @@ public class AddCityActivity extends AppCompatActivity {
         if(cityList.size() != 0)
         {
             AlertDialogHelper.showWarningDialog(this,
-                    "Внимание", "Не удалось сохранить некоторые города. Попробуйте повторить операцию позднее");
+                    getResources().getString(R.string.main_dialog_warning_title),
+                    getResources().getString(R.string.add_city_dialog_message_save));
             return;
         }
 
@@ -265,8 +274,8 @@ public class AddCityActivity extends AppCompatActivity {
         if(cityList.size() > 0)
         {
             AlertDialogHelper.showQuestionDialog(this,
-                    "Внимание",
-                    "Есть несохраненные города. Вы действительно хотите продолжить?",
+                    getResources().getString(R.string.main_dialog_warning_title),
+                    getResources().getString(R.string.add_city_question_not_save),
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {

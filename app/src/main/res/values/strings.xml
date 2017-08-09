@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">WeatherClient</string>
-    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="main_dialog_warning_title">Внимание</string>
+    <string name="main_question_delete_city">Вы действительно хотите удалить город - %s ?</string>
+
+    <string name="add_city_dialog_message_empty">Необходимо ввести город!</string>
+    <string name="add_city_dialog_message_found">Введенный город не найден!</string>
+    <string name="add_city_dialog_message_exists">Введенный город уже есть в списке!</string>
+    <string name="add_city_dialog_message_empty_list">Должен быть добавлен хотя бы один город!</string>
+    <string name="add_city_dialog_message_save">Не удалось сохранить некоторые города. Попробуйте повторить операцию позднее</string>
+    <string name="add_city_question_not_save">Есть несохраненные города. Вы действительно хотите продолжить?</string>
+
 </resources>
