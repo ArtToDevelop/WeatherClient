@@ -15,6 +15,7 @@
     <string name="add_city_button_complete">Готово</string>
     <string name="add_city_current_city_name">Текущий город: </string>
     <string name="add_city_current_found">Определяется&#8230;</string>
+    <string name="add_city_current_enable">Включите определение местоположения</string>
     <string name="add_city_input_name">Введите название города:</string>
     <string name="add_city_input_hint_lat">(латинскими буквами)</string>
     <string name="add_city_button">Добавить</string>

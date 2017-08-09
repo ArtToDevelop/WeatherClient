@@ -2,6 +2,8 @@ package sigalov.arttodevelop.weatherclient.data;
 
 
 import android.content.Context;
+import android.location.Location;
+import android.util.Log;
 
 import java.util.Calendar;
 import java.util.List;
@@ -36,6 +38,24 @@ public class DataManager {
 
         synchronization = new SynchronizationOkHttp(storage);
         synchronization.initSync();
+    }
+
+    public City getCityByLocationFromServer(Location location)
+    {
+        if(location == null)
+            return null;
+
+        City foundCity = null;
+
+        try {
+            foundCity = synchronization.getCityByLocation(location.getLongitude(), location.getLatitude());
+        }
+        catch (Exception ex)
+        {
+            Log.e("getCityByLocation", "Exception - " + ex.getMessage());
+        }
+
+        return foundCity;
     }
 
     public City getCityByString(String cityName)

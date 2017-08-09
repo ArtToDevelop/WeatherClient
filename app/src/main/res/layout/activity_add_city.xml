@@ -21,8 +21,10 @@
             android:textStyle="bold"/>
 
         <TextView
+            android:id="@+id/add_current_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
             android:text="@string/add_city_current_found" />
 
         <ImageView

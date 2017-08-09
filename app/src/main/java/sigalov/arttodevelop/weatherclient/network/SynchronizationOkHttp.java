@@ -73,6 +73,11 @@ public class SynchronizationOkHttp {
         }
     }
 
+    public City getCityByLocation(double longitude, double latitude) throws Exception
+    {
+        return new CityRequestTask(longitude, latitude).execute().get();
+    }
+
     public Weather getWeather(String cityId)
     {
         Weather weather = null;
@@ -104,6 +109,30 @@ public class SynchronizationOkHttp {
         protected Weather doInBackground(Void... params) {
 
             return getWeather(cityId);
+        }
+    }
+
+    private class CityRequestTask extends AsyncTask<Void, Void, City> {
+
+        double longitude, latitude;
+
+        public CityRequestTask(double longitude, double latitude)
+        {
+            this.longitude = longitude;
+            this.latitude = latitude;
+        }
+
+        @Override
+        protected City doInBackground(Void... params) {
+            City foundCity = null;
+
+            try {
+                foundCity = getCityByLongLat(longitude, latitude);
+            } catch (Exception ex) {
+                Log.e("CityRequestTask", "doInBackground: ", ex);
+            }
+
+            return foundCity;
         }
     }
 
@@ -146,6 +175,23 @@ public class SynchronizationOkHttp {
         return getWeatherByJson(receivedText);
     }
 
+    private City getCityByLongLat(double longitude, double latitude) throws Exception
+    {
+        Request request = new Request.Builder()
+                .tag(UPDATE_ITEM_REQUEST_TAG)
+                .url(getCityApiUrl(String.format("?lat=%s&lon=%s", latitude, longitude)))
+                .build();
+
+        Response response = client.newCall(request).execute();
+        String receivedText = response.body().string();
+
+        checkResponse(receivedText, response);
+
+        List<City> cityList = getCityListByStringJson(receivedText);
+
+        return (cityList != null && cityList.size() > 0) ? cityList.get(0) : null;
+    }
+
     private List<City> getCityListRequest(String foundCityString) throws Exception
     {
         Request request = new Request.Builder()
@@ -160,6 +206,7 @@ public class SynchronizationOkHttp {
 
         return getCityListByStringJson(receivedText);
     }
+
 
     public List<City> getCityListByStringJson(String data) throws JSONException {
 

@@ -2,6 +2,7 @@ package sigalov.arttodevelop.weatherclient.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.location.Location;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,9 @@ import sigalov.arttodevelop.weatherclient.adapters.address.AddressAutoCompleteAd
 import sigalov.arttodevelop.weatherclient.adapters.address.AddressAutoCompleteTextView;
 import sigalov.arttodevelop.weatherclient.data.DataManager;
 import sigalov.arttodevelop.weatherclient.helpers.AlertDialogHelper;
+import sigalov.arttodevelop.weatherclient.interfaces.OnChangeLocationListener;
 import sigalov.arttodevelop.weatherclient.interfaces.OnCityDeleteListener;
+import sigalov.arttodevelop.weatherclient.location.LocationModule;
 import sigalov.arttodevelop.weatherclient.models.City;
 
 public class AddCityActivity extends AppCompatActivity {
@@ -39,6 +43,8 @@ public class AddCityActivity extends AppCompatActivity {
     private Button addButton, completeButton;
     private ImageView addLocationImageView;
 
+    private TextView currentCityTextView;
+
     private RecyclerView recyclerView;
     private CityRecyclerAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -49,6 +55,9 @@ public class AddCityActivity extends AppCompatActivity {
     private InputMethodManager inputMethodManager;
 
     private ArrayList<City> cityList = new ArrayList<>();
+
+    private LocationModule locationModule;
+    private City currentCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,9 +96,13 @@ public class AddCityActivity extends AppCompatActivity {
         addLocationImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("addLocationImageView", "success");
+                if(currentCity != null) {
+                    addCity(currentCity);
+                }
             }
         });
+
+        currentCityTextView = (TextView) findViewById(R.id.add_current_city);
 
         addButton = (Button) findViewById(R.id.add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -120,6 +133,13 @@ public class AddCityActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        locationModule = new LocationModule(this, new OnChangeLocationListener() {
+            @Override
+            public void OnChangeLocation(Location location) {
+                newLocation(location);
+            }
+        });
+        locationModule.startLocation();
 
         if(savedInstanceState != null && savedInstanceState.containsKey(CITY_LIST_KEY))
         {
@@ -146,6 +166,34 @@ public class AddCityActivity extends AppCompatActivity {
         }
     }
 
+    private void newLocation(Location location)
+    {
+        currentCity = dataManager.getCityByLocationFromServer(location);
+        updateVisibleCity();
+    }
+
+    private void updateVisibleCity()
+    {
+        if(currentCity != null)
+        {
+            currentCityTextView.setText(currentCity.getName());
+            addLocationImageView.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        addLocationImageView.setVisibility(View.GONE);
+
+        if (!locationModule.isEnabled())
+        {
+            currentCityTextView.setText(getResources().getString(R.string.add_city_current_enable));
+            return;
+        }
+
+        if (!locationModule.isSearched()) {
+            currentCityTextView.setText(getResources().getString(R.string.add_city_current_found));
+        }
+    }
+
     private void addCity()
     {
         String currentInputText = addressTextView.getText().toString();
@@ -165,7 +213,12 @@ public class AddCityActivity extends AppCompatActivity {
             return;
         }
 
-        if(isCityContainInList(foundCity)) {
+        addCity(foundCity);
+    }
+
+    private void addCity(City city)
+    {
+        if(isCityContainInList(city)) {
             AlertDialogHelper.showWarningDialog(this,
                     getResources().getString(R.string.main_dialog_warning_title),
                     getResources().getString(R.string.add_city_dialog_message_exists));
@@ -174,7 +227,7 @@ public class AddCityActivity extends AppCompatActivity {
 
         addressTextView.setText("");
 
-        cityList.add(foundCity);
+        cityList.add(city);
         updateAdapter();
     }
 
