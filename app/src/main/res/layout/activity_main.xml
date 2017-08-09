@@ -24,7 +24,7 @@
             android:id="@+id/main_info_text_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Для просмотра погоды необходимо добавить город"
+            android:text="@string/main_city_empty_list_not"
             android:textStyle="bold"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"

@@ -3,6 +3,7 @@
 
     <string name="main_dialog_warning_title">Внимание</string>
     <string name="main_question_delete_city">Вы действительно хотите удалить город - %s ?</string>
+    <string name="main_city_empty_list_not">Для просмотра погоды необходимо добавить город</string>
 
     <string name="add_city_dialog_message_empty">Необходимо ввести город!</string>
     <string name="add_city_dialog_message_found">Введенный город не найден!</string>
@@ -10,6 +11,14 @@
     <string name="add_city_dialog_message_empty_list">Должен быть добавлен хотя бы один город!</string>
     <string name="add_city_dialog_message_save">Не удалось сохранить некоторые города. Попробуйте повторить операцию позднее</string>
     <string name="add_city_question_not_save">Есть несохраненные города. Вы действительно хотите продолжить?</string>
+
+    <string name="add_city_button_complete">Готово</string>
+    <string name="add_city_current_city_name">Текущий город: </string>
+    <string name="add_city_current_found">Определяется&#8230;</string>
+    <string name="add_city_input_name">Введите название города:</string>
+    <string name="add_city_input_hint_lat">(латинскими буквами)</string>
+    <string name="add_city_button">Добавить</string>
+    <string name="add_city_preview">Предварительный просмотр:</string>
 
     <string name="weather_item_name">Температура - %.0f °C</string>
     <string name="weather_item_direction">Направление ветра - %s</string>
