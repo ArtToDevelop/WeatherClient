@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import sigalov.arttodevelop.weatherclient.R;
 import sigalov.arttodevelop.weatherclient.adapters.WeatherRecyclerAdapter;
 import sigalov.arttodevelop.weatherclient.data.DataManager;
 import sigalov.arttodevelop.weatherclient.interfaces.OnProgressSyncChangeListener;
+import sigalov.arttodevelop.weatherclient.interfaces.OnWeatherDeleteListener;
 import sigalov.arttodevelop.weatherclient.models.City;
 import sigalov.arttodevelop.weatherclient.models.Weather;
 
@@ -39,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements OnProgressSyncCha
     private FloatingActionButton addButton;
 
     private boolean isSyncNow;
-    private Double progressValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +50,16 @@ public class MainActivity extends AppCompatActivity implements OnProgressSyncCha
         dataManager = DataManager.getInstance();
 
         layoutManager = new LinearLayoutManager(this);
-        adapter = new WeatherRecyclerAdapter();
+        adapter = new WeatherRecyclerAdapter(new OnWeatherDeleteListener() {
+            @Override
+            public void onWeatherDelete(Weather weather) {
+                deleteWeather(weather);
+            }
+        });
 
         infoTextView = (TextView) findViewById(R.id.main_info_text_view);
 
         progressBar = (ProgressBar) findViewById(R.id.main_progress_bar);
-        progressValue = (double)progressBar.getMax();
 
         recyclerView = (RecyclerView) findViewById(R.id.main_city_recycler_view);
         recyclerView.setLayoutManager(layoutManager);
@@ -119,6 +124,12 @@ public class MainActivity extends AppCompatActivity implements OnProgressSyncCha
                 }
             }
         });
+    }
+
+    private void deleteWeather(Weather weather)
+    {
+        Log.i("deleteWeather", "success");
+        
     }
 
     private class SyncTask extends AsyncTask<Void, Void, List<Weather>> {
