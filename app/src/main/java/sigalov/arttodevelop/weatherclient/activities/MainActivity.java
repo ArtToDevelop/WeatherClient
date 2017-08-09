@@ -89,6 +89,11 @@ public class MainActivity extends AppCompatActivity implements OnProgressSyncCha
                 goToAddCityActivity();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         startSync();
     }

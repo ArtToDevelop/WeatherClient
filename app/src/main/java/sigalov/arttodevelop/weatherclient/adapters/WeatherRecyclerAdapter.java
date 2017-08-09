@@ -7,9 +7,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import sigalov.arttodevelop.weatherclient.R;
 import sigalov.arttodevelop.weatherclient.interfaces.OnCityDeleteListener;
@@ -25,7 +29,7 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
 
     public static class WeatherViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView nameTextView, temperatureTextView, windTextView, directionTextView;
+        public TextView nameTextView, dataTextView, temperatureTextView, windTextView, directionTextView;
 
         public ImageButton deleteButton;
 
@@ -33,6 +37,7 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
             super(v);
 
             nameTextView = (TextView) v.findViewById(R.id.weather_item_name);
+            dataTextView = (TextView) v.findViewById(R.id.weather_item_date);
             temperatureTextView = (TextView) v.findViewById(R.id.weather_item_temperature);
             windTextView = (TextView) v.findViewById(R.id.weather_item_wind);
             directionTextView = (TextView) v.findViewById(R.id.weather_item_direction);
@@ -41,6 +46,7 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
 
         public void bind(final Weather weather, final OnWeatherDeleteListener listener) {
             nameTextView.setText(weather.getName());
+            dataTextView.setText(utcToLocalTime(weather.getDateRefresh()));
             temperatureTextView.setText(String.format(Locale.getDefault(), "Температура - %.0f °C", getCelciusByKelvinValue(weather.getTemp())));
             directionTextView.setText(String.format("Направление ветра - %s", getStringByWindDeg(weather.getWindDeg())));
             windTextView.setText(String.format(Locale.getDefault(), "Скорость ветра - %.0f м/с", weather.getWindSpeed()));
@@ -50,6 +56,15 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
                     listener.onWeatherDelete(weather);
                 }
             });
+        }
+
+        private String utcToLocalTime(Date date)
+        {
+            Calendar cal = Calendar.getInstance();
+            TimeZone tz = cal.getTimeZone();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault());
+            sdf.setTimeZone(tz);
+            return sdf.format(date);
         }
 
         private Double getCelciusByKelvinValue(Double kelvin)
