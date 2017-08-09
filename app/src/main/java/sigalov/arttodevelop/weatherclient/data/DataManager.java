@@ -73,7 +73,7 @@ public class DataManager {
         if(weather == null)
             return;
 
-        weather.setCityId(city.getServerId());
+        weather.setCityId(city.getId());
         weather.setName(city.getName());
         weather.setDateRefresh(Calendar.getInstance().getTime());
 
@@ -86,7 +86,7 @@ public class DataManager {
         if(weather == null)
             return false;
 
-        weather.setCityId(city.getServerId());
+        weather.setCityId(city.getId());
         weather.setName(city.getName());
 
         storage.upsertCity(city);

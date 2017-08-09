@@ -28,7 +28,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("CREATE TABLE " + Weather.TableName + " (" +
                 " 'id' INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                " 'city_id' TEXT NOT NULL, " +
+                " 'city_id' INTEGER NOT NULL, " +
                 " 'date_refresh' DATETIME, " +
                 " 'name' TEXT, " +
                 " 'temp' REAL, " +

@@ -63,13 +63,13 @@ public class Storage {
         return city.getId();
     }
 
-    private synchronized Weather getWeather(final String cityId) {
+    private synchronized Weather getWeather(final Integer cityId) {
         Cursor cursor = db.query(Weather.TableName, null, "city_id=" + cityId, null, null, null, null);
         cursor.moveToFirst();
-        Weather city = getWeatherFromCursor(cursor);
+        Weather weather = getWeatherFromCursor(cursor);
         cursor.close();
 
-        return city;
+        return weather;
     }
 
     private synchronized City getCity(final String serverId) {
@@ -202,7 +202,7 @@ public class Storage {
     private synchronized Weather cursorToWeather(@NonNull Weather weather, @NonNull Cursor cursor) {
 
         weather.setId(cursor.getInt(cursor.getColumnIndex("id")));
-        weather.setCityId(cursor.getString(cursor.getColumnIndex("city_id")));
+        weather.setCityId(cursor.getInt(cursor.getColumnIndex("city_id")));
         weather.setName(cursor.getString(cursor.getColumnIndex("name")));
         weather.setTemp(cursor.getDouble(cursor.getColumnIndex("temp")));
         weather.setWindSpeed(cursor.getDouble(cursor.getColumnIndex("wind_speed")));

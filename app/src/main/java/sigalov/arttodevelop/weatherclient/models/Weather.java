@@ -15,13 +15,13 @@ public class Weather {
         this.id = id;
     }
 
-    private String cityId;
+    private Integer cityId;
 
-    public String getCityId() {
+    public Integer getCityId() {
         return cityId;
     }
 
-    public void setCityId(String cityId) {
+    public void setCityId(Integer cityId) {
         this.cityId = cityId;
     }
 
