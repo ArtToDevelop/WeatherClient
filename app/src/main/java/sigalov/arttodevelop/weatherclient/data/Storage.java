@@ -81,6 +81,12 @@ public class Storage {
         return city;
     }
 
+    public synchronized void deleteCity(Integer id)
+    {
+        int delId = db.delete(City.TableName, "id = " + id, null);
+        Log.d(TAG, "deleteCity: id = " + delId);
+    }
+
     public synchronized List<Weather> getAllWeathers() {
         Cursor cursor = db.query(Weather.TableName, null, null, null, null, null, "name ASC");
         return getWeatherListFromCursor(cursor);

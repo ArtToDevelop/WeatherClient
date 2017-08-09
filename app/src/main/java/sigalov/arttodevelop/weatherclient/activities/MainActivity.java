@@ -1,9 +1,11 @@
 package sigalov.arttodevelop.weatherclient.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +22,7 @@ import java.util.List;
 import sigalov.arttodevelop.weatherclient.R;
 import sigalov.arttodevelop.weatherclient.adapters.WeatherRecyclerAdapter;
 import sigalov.arttodevelop.weatherclient.data.DataManager;
+import sigalov.arttodevelop.weatherclient.helpers.AlertDialogHelper;
 import sigalov.arttodevelop.weatherclient.interfaces.OnProgressSyncChangeListener;
 import sigalov.arttodevelop.weatherclient.interfaces.OnWeatherDeleteListener;
 import sigalov.arttodevelop.weatherclient.models.City;
@@ -126,10 +129,20 @@ public class MainActivity extends AppCompatActivity implements OnProgressSyncCha
         });
     }
 
-    private void deleteWeather(Weather weather)
+    private void deleteWeather(final Weather weather)
     {
-        Log.i("deleteWeather", "success");
-        
+        AlertDialogHelper.showQuestionDialog(this, "Внимание",
+                String.format("Вы действительно хотите удалить город - %s", weather.getName()),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dataManager.deleteCity(weather.getCityId());
+
+                        adapter.setData(dataManager.getAllWeatherLocalList());
+                        adapter.notifyDataSetChanged();
+                    }
+                },
+                null);
     }
 
     private class SyncTask extends AsyncTask<Void, Void, List<Weather>> {

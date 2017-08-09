@@ -93,4 +93,9 @@ public class DataManager {
 
         return true;
     }
+
+    public void deleteCity(Integer localId)
+    {
+        storage.deleteCity(localId);
+    }
 }
