@@ -7,13 +7,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import sigalov.arttodevelop.weatherclient.R;
 import sigalov.arttodevelop.weatherclient.models.Weather;
 
 public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecyclerAdapter.WeatherViewHolder> {
 
-    private ArrayList<Weather> dataList;
+    private List<Weather> dataList;
 
     public static class WeatherViewHolder extends RecyclerView.ViewHolder {
 
@@ -33,7 +34,7 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
         dataList = new ArrayList<>();
     }
 
-    public void setData(ArrayList<Weather> dataList)
+    public void setData(List<Weather> dataList)
     {
         this.dataList = dataList;
     }
@@ -59,6 +60,9 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
 
     @Override
     public int getItemCount() {
+        if(dataList == null)
+            return 0;
+
         return dataList.size();
     }
 }

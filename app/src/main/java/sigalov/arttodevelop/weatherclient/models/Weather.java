@@ -1,16 +1,38 @@
 package sigalov.arttodevelop.weatherclient.models;
 
+import java.util.Date;
+
 public class Weather {
     public static final String TableName = "WEATHER";
 
-    private Integer cityId;
+    private Integer id;
 
-    public Integer getCityId() {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    private String cityId;
+
+    public String getCityId() {
         return cityId;
     }
 
-    public void setCityId(Integer cityId) {
+    public void setCityId(String cityId) {
         this.cityId = cityId;
+    }
+
+    public Date dateRefresh;
+
+    public void setDateRefresh(Date dateRefresh) {
+        this.dateRefresh = dateRefresh;
+    }
+
+    public Date getDateRefresh() {
+        return dateRefresh;
     }
 
     private String name;

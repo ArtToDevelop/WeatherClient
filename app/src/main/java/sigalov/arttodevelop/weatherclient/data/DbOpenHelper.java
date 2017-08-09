@@ -28,14 +28,20 @@ public class DbOpenHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("CREATE TABLE " + Weather.TableName + " (" +
                 " 'id' INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                " 'city_id' INTEGER NOT NULL, " +
-                " 'date_refresh' INTEGER, " +
+                " 'city_id' TEXT NOT NULL, " +
+                " 'date_refresh' DATETIME, " +
                 " 'name' TEXT, " +
                 " 'temp' REAL, " +
                 " 'wind_speed' REAL, " +
                 " 'wind_deg' REAL, " +
                 " FOREIGN KEY(city_id) REFERENCES " + City.TableName + "(id) ON DELETE CASCADE);");
 
+        sqLiteDatabase.execSQL("CREATE TRIGGER 'city_weather_creation_trigger' " +
+                "AFTER INSERT ON " + City.TableName + " " +
+                "FOR EACH ROW " +
+                "BEGIN " +
+                "INSERT INTO " + Weather.TableName + " (city_id, name, date_refresh) VALUES(new.id, new.name, datetime()); " +
+                "END;");
     }
 
     @Override

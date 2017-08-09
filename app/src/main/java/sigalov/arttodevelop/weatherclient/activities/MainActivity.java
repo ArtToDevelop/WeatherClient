@@ -1,6 +1,7 @@
 package sigalov.arttodevelop.weatherclient.activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import sigalov.arttodevelop.weatherclient.R;
 import sigalov.arttodevelop.weatherclient.adapters.WeatherRecyclerAdapter;
@@ -56,8 +58,7 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.i("swipeRefreshLayout", "onClick");
-
+                new SyncTask().execute();
             }
         });
 
@@ -74,11 +75,41 @@ public class MainActivity extends AppCompatActivity {
                 goToAddCityActivity();
             }
         });
+
+        new SyncTask().execute();
     }
 
     private void goToAddCityActivity()
     {
         Intent intent = new Intent(this, AddCityActivity.class);
         startActivity(intent);
+    }
+
+    private class SyncTask extends AsyncTask<Void, Void, List<Weather>> {
+
+        @Override
+        protected List<Weather> doInBackground(Void... params) {
+            return dataManager.getAllWeatherLocalList();
+        }
+
+        @Override
+        protected void onPostExecute(List<Weather> weatherList) {
+            super.onPostExecute(weatherList);
+            swipeRefreshLayout.setRefreshing(false);
+
+            if(weatherList == null || weatherList.size() == 0)
+            {
+                recyclerView.setVisibility(View.INVISIBLE);
+                infoTextView.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                recyclerView.setVisibility(View.VISIBLE);
+                infoTextView.setVisibility(View.INVISIBLE);
+            }
+
+            adapter.setData(weatherList);
+            adapter.notifyDataSetChanged();
+        }
     }
 }

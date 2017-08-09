@@ -73,16 +73,17 @@ public class SynchronizationOkHttp {
         }
     }
 
-    public Weather getWeather(Integer cityId) throws Exception
+
+    public Weather getWeather(String cityId) throws Exception
     {
        return new WeatherRequestTask(cityId).execute().get();
     }
 
     private class WeatherRequestTask extends AsyncTask<Void, Void, Weather> {
 
-        Integer cityId;
+        String cityId;
 
-        public WeatherRequestTask(Integer cityId)
+        public WeatherRequestTask(String cityId)
         {
             this.cityId = cityId;
         }
@@ -125,7 +126,7 @@ public class SynchronizationOkHttp {
         }
     }
 
-    private Weather getWeatherRequest(Integer cityId) throws Exception
+    private Weather getWeatherRequest(String cityId) throws Exception
     {
         Request request = new Request.Builder()
                 .tag(UPDATE_ITEM_REQUEST_TAG)
@@ -168,7 +169,7 @@ public class SynchronizationOkHttp {
             JSONObject obj = jArr.getJSONObject(i);
 
             String name = obj.getString("name");
-            Integer serverId = obj.getInt("id");
+            String serverId = obj.getString("id");
 
             City c = new City(serverId, name);
 

@@ -42,7 +42,7 @@ public class AddressAutoCompleteAdapter extends AutoCompleteBaseAdapter {
     protected List<String> findItems(String itemValue) {
         List<String> result = new ArrayList<>();
 
-        hintAddressList = dataManager.getCityList(itemValue);
+        hintAddressList = dataManager.getCityListFromServer(itemValue);
 
         if(hintAddressList == null)
             return new ArrayList<>();
@@ -64,7 +64,7 @@ public class AddressAutoCompleteAdapter extends AutoCompleteBaseAdapter {
         if(hintAddress == null)
             return -1;
 
-        return hintAddress.getServerId();
+        return Long.parseLong(hintAddress.getServerId());
     }
 
     @Override

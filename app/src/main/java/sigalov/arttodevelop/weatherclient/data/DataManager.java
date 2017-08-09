@@ -39,7 +39,7 @@ public class DataManager {
 
     public City getCityByString(String cityName)
     {
-        List<City> cityList = getCityList(cityName);
+        List<City> cityList = getCityListFromServer(cityName);
 
         City foundCity = null;
 
@@ -53,9 +53,13 @@ public class DataManager {
         return foundCity;
     }
 
-    public List<City> getCityList(String foundCityString)
+    public List<City> getCityListFromServer(String foundCityString)
     {
         return synchronization.getCityList(foundCityString);
+    }
+
+    public List<Weather> getAllWeatherLocalList() {
+        return storage.getAllWeathers();
     }
 
     public boolean addNewCity(City city) throws Exception
@@ -67,10 +71,7 @@ public class DataManager {
         weather.setCityId(city.getServerId());
         weather.setName(city.getName());
 
-        //TODO: сохранение в базу
-        //.....
-
-
+        storage.upsertCity(city);
 
         return true;
     }

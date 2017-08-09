@@ -7,28 +7,41 @@ import android.os.Parcelable;
 public class City implements Parcelable {
     public static final String TableName = "CITY";
 
-    private Integer serverId;
+    private String serverId;
     private Integer id;
     private String name;
 
-    public City(Integer serverId, String name)
+    public City()
+    {
+
+    }
+
+    public City(String serverId, String name)
     {
         this.serverId = serverId;
         this.name = name;
     }
 
     private City(Parcel in) {
-        serverId = in.readInt();
+        serverId = in.readString();
         id = in.readInt();
         name = in.readString();
     }
 
-    public Integer getServerId() {
+    public String getServerId() {
         return serverId;
+    }
+
+    public void setServerId(String serverId) {
+        this.serverId = serverId;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getId() {
@@ -46,7 +59,7 @@ public class City implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(serverId);
+        parcel.writeString(serverId);
         parcel.writeInt(id);
         parcel.writeString(name);
     }

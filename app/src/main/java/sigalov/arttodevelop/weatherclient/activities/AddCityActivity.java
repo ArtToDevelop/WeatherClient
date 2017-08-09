@@ -31,6 +31,8 @@ import sigalov.arttodevelop.weatherclient.models.City;
 
 public class AddCityActivity extends AppCompatActivity {
 
+    private static final String CITY_LIST_KEY = "CityListKey";
+
     private DataManager dataManager = DataManager.getInstance();
 
     private ProgressBar progressBar;
@@ -119,9 +121,9 @@ public class AddCityActivity extends AppCompatActivity {
 
         inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        if(savedInstanceState != null && savedInstanceState.containsKey("key"))
+        if(savedInstanceState != null && savedInstanceState.containsKey(CITY_LIST_KEY))
         {
-            cityList = savedInstanceState.getParcelableArrayList("key");
+            cityList = savedInstanceState.getParcelableArrayList(CITY_LIST_KEY);
             adapter.setData(cityList);
             adapter.notifyDataSetChanged();
         }
@@ -129,7 +131,7 @@ public class AddCityActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList("key", cityList);
+        outState.putParcelableArrayList(CITY_LIST_KEY, cityList);
         super.onSaveInstanceState(outState);
     }
 
