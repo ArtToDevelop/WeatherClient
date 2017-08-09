@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import sigalov.arttodevelop.weatherclient.R;
 import sigalov.arttodevelop.weatherclient.models.Weather;
@@ -53,9 +54,9 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
         Weather item = dataList.get(position);
 
         holder.nameTextView.setText(item.getName());
-        holder.temperatureTextView.setText(String.format("Температура - %s", item.getTemp()));
+        holder.temperatureTextView.setText(String.format(Locale.getDefault(), "Температура - %.0f °C", getCelciusByKelvinValue(item.getTemp())));
         holder.directionTextView.setText(String.format("Направление ветра - %s", getStringByWindDeg(item.getWindDeg())));
-        holder.windTextView.setText(String.format("Скорость ветра - %s", item.getWindSpeed()));
+        holder.windTextView.setText(String.format(Locale.getDefault(), "Скорость ветра - %.0f м/с", item.getWindSpeed()));
     }
 
     @Override
@@ -64,6 +65,11 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
             return 0;
 
         return dataList.size();
+    }
+
+    private Double getCelciusByKelvinValue(Double kelvin)
+    {
+        return kelvin - 273.15;
     }
 
     private String getStringByWindDeg(Double windDeg)
@@ -96,11 +102,4 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
 
         return degString;
     }
-
-
-//    //Fahrenhiet to Celcius
-//    private double fahrenhietToCelcius(double f)
-//    {
-//        return (f-32)*5/9;
-//    }
 }
