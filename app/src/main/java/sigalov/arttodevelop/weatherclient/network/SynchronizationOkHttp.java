@@ -73,8 +73,20 @@ public class SynchronizationOkHttp {
         }
     }
 
+    public Weather getWeather(String cityId)
+    {
+        Weather weather = null;
 
-    public Weather getWeather(String cityId) throws Exception
+        try {
+            weather = getWeatherRequest(cityId);
+        } catch (Exception ex) {
+            Log.e("getWeather", "error: ", ex);
+        }
+
+        return weather;
+    }
+
+    public Weather getWeatherAsync(String cityId) throws Exception
     {
        return new WeatherRequestTask(cityId).execute().get();
     }
@@ -90,15 +102,8 @@ public class SynchronizationOkHttp {
 
         @Override
         protected Weather doInBackground(Void... params) {
-            Weather weather = null;
 
-            try {
-                weather = getWeatherRequest(cityId);
-            } catch (Exception ex) {
-                Log.e("CityListRequestTask", "doInBackground: ", ex);
-            }
-
-            return weather;
+            return getWeather(cityId);
         }
     }
 

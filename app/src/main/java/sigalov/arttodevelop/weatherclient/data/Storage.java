@@ -63,6 +63,15 @@ public class Storage {
         return city.getId();
     }
 
+    private synchronized Weather getWeather(final String cityId) {
+        Cursor cursor = db.query(Weather.TableName, null, "city_id=" + cityId, null, null, null, null);
+        cursor.moveToFirst();
+        Weather city = getWeatherFromCursor(cursor);
+        cursor.close();
+
+        return city;
+    }
+
     private synchronized City getCity(final String serverId) {
         Cursor cursor = db.query(City.TableName, null, "server_id=" + serverId, null, null, null, null);
         cursor.moveToFirst();
@@ -75,6 +84,24 @@ public class Storage {
     public synchronized List<Weather> getAllWeathers() {
         Cursor cursor = db.query(Weather.TableName, null, null, null, null, null, "name ASC");
         return getWeatherListFromCursor(cursor);
+    }
+
+    public synchronized List<City> getAllCities() {
+        Cursor cursor = db.query(City.TableName, null, null, null, null, null, "id ASC");
+        return getCityListFromCursor(cursor);
+    }
+
+    public synchronized long updateWeather(Weather weather) {
+        if (weather.getCityId() != null) {
+            Weather currentItem = getWeather(weather.getCityId());
+
+            if (currentItem != null)
+                weather.setId(currentItem.getId());
+        }
+
+        ContentValues contentValues = weatherToContentValues(weather);
+
+        return db.updateWithOnConflict(Weather.TableName, contentValues, "id = " + weather.getId(), null, SQLiteDatabase.CONFLICT_NONE);
     }
 
     private synchronized long updateCity(City item) {
@@ -120,7 +147,35 @@ public class Storage {
         return contentValues;
     }
 
+    private synchronized ContentValues weatherToContentValues(Weather weather) {
+        ContentValues contentValues = new ContentValues();
 
+        if(weather.getId() != null && weather.getId() != 0)
+            contentValues.put("id", weather.getId());
+
+        contentValues.put("city_id", weather.getCityId());
+        contentValues.put("date_refresh", weather.getDateRefresh().getTime());
+        contentValues.put("name", weather.getName());
+        contentValues.put("temp", weather.getTemp());
+        contentValues.put("wind_speed", weather.getWindSpeed());
+        contentValues.put("wind_deg", weather.getWindDeg());
+
+        return contentValues;
+    }
+
+    private synchronized List<City> getCityListFromCursor(Cursor cursor) {
+        List<City> result = new ArrayList<>();
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            City city = getCityFromCursor(cursor);
+            result.add(city);
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        return result;
+    }
 
     private synchronized List<Weather> getWeatherListFromCursor(Cursor cursor) {
         List<Weather> result = new ArrayList<>();

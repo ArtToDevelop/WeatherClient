@@ -3,6 +3,7 @@ package sigalov.arttodevelop.weatherclient.data;
 
 import android.content.Context;
 
+import java.util.Calendar;
 import java.util.List;
 
 import sigalov.arttodevelop.weatherclient.WeatherClientApplication;
@@ -58,13 +59,30 @@ public class DataManager {
         return synchronization.getCityList(foundCityString);
     }
 
+    public List<City> getAllCityLocalList() {
+        return storage.getAllCities();
+    }
+
     public List<Weather> getAllWeatherLocalList() {
         return storage.getAllWeathers();
     }
 
-    public boolean addNewCity(City city) throws Exception
+    public void updateWeatherByCity(City city) throws Exception
     {
         Weather weather = synchronization.getWeather(city.getServerId());
+        if(weather == null)
+            return;
+
+        weather.setCityId(city.getServerId());
+        weather.setName(city.getName());
+        weather.setDateRefresh(Calendar.getInstance().getTime());
+
+        storage.updateWeather(weather);
+    }
+
+    public boolean addNewCity(City city) throws Exception
+    {
+        Weather weather = synchronization.getWeatherAsync(city.getServerId());
         if(weather == null)
             return false;
 

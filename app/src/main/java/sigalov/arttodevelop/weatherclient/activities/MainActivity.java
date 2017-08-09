@@ -19,9 +19,11 @@ import java.util.List;
 import sigalov.arttodevelop.weatherclient.R;
 import sigalov.arttodevelop.weatherclient.adapters.WeatherRecyclerAdapter;
 import sigalov.arttodevelop.weatherclient.data.DataManager;
+import sigalov.arttodevelop.weatherclient.interfaces.OnProgressSyncChangeListener;
+import sigalov.arttodevelop.weatherclient.models.City;
 import sigalov.arttodevelop.weatherclient.models.Weather;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnProgressSyncChangeListener {
 
     DataManager dataManager;
 
@@ -36,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
 
     private FloatingActionButton addButton;
 
+    private boolean isSyncNow;
+    private Double progressValue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         infoTextView = (TextView) findViewById(R.id.main_info_text_view);
 
         progressBar = (ProgressBar) findViewById(R.id.main_progress_bar);
+        progressValue = (double)progressBar.getMax();
 
         recyclerView = (RecyclerView) findViewById(R.id.main_city_recycler_view);
         recyclerView.setLayoutManager(layoutManager);
@@ -58,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new SyncTask().execute();
+                startSync();
             }
         });
 
@@ -76,7 +82,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        new SyncTask().execute();
+        startSync();
+    }
+
+    private void startSync()
+    {
+        if(isSyncNow)
+            return;
+
+        isSyncNow = true;
+
+        onProgressSyncChange(0.0);
+        new SyncTask(this, (double)progressBar.getMax()).execute();
     }
 
     private void goToAddCityActivity()
@@ -85,10 +102,60 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    public void onProgressSyncChange(final Double value) {
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                if(value == progressBar.getMax())
+                {
+                    progressBar.setVisibility(View.GONE);
+                }
+                else
+                {
+                    progressBar.setVisibility(View.VISIBLE);
+                    progressBar.setProgress((int)(value * 100 / progressBar.getMax()));
+                }
+            }
+        });
+    }
+
     private class SyncTask extends AsyncTask<Void, Void, List<Weather>> {
+
+        OnProgressSyncChangeListener progressListener;
+        Double maxProgressValue;
+
+        public SyncTask(OnProgressSyncChangeListener progressListener, Double maxProgressValue)
+        {
+            this.progressListener = progressListener;
+            this.maxProgressValue = maxProgressValue;
+        }
 
         @Override
         protected List<Weather> doInBackground(Void... params) {
+            List<City> cityList = dataManager.getAllCityLocalList();
+
+            if (cityList != null && cityList.size() > 0)
+            {
+                Double currentProgressValue = 0.0;
+                Double progressChangeValue = (maxProgressValue / cityList.size());
+
+                for(City city : cityList)
+                {
+                    try {
+                        dataManager.updateWeatherByCity(city);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.e(String.format("Error sync city - %s", city.getName()), ex.getMessage());
+                    }
+
+                    currentProgressValue += progressChangeValue;
+                    progressListener.onProgressSyncChange(currentProgressValue);
+                }
+            }
+
             return dataManager.getAllWeatherLocalList();
         }
 
@@ -110,6 +177,10 @@ public class MainActivity extends AppCompatActivity {
 
             adapter.setData(weatherList);
             adapter.notifyDataSetChanged();
+
+            isSyncNow = false;
+            onProgressSyncChange((double)progressBar.getMax());
         }
+
     }
 }
