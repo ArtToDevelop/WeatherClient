@@ -112,9 +112,6 @@ public class MainActivity extends AppCompatActivity implements OnProgressSyncCha
 
             @Override
             public void run() {
-                adapter.setData(weatherList);
-                adapter.notifyDataSetChanged();
-
                 if(weatherList == null || weatherList.size() == 0)
                 {
                     recyclerView.setVisibility(View.INVISIBLE);
