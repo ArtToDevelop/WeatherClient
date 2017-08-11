@@ -90,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements OnProgressSyncCha
                 goToAddCityActivity();
             }
         });
+
+        if(savedInstanceState == null)
+            updateUI();
     }
 
     @Override
@@ -97,6 +100,12 @@ public class MainActivity extends AppCompatActivity implements OnProgressSyncCha
         super.onResume();
 
         startSync();
+    }
+
+    private void updateUI()
+    {
+        adapter.setData(dataManager.getAllWeatherLocalList());
+        adapter.notifyDataSetChanged();
     }
 
     private void startSync()
