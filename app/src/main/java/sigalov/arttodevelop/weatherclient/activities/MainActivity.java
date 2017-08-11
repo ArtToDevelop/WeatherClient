@@ -91,8 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnProgressSyncCha
             }
         });
 
-        if(savedInstanceState == null)
-            updateUI();
+        updateUI();
     }
 
     @Override
@@ -104,8 +103,33 @@ public class MainActivity extends AppCompatActivity implements OnProgressSyncCha
 
     private void updateUI()
     {
-        adapter.setData(dataManager.getAllWeatherLocalList());
-        adapter.notifyDataSetChanged();
+        updateUI(dataManager.getAllWeatherLocalList());
+    }
+
+    private void updateUI(final List<Weather> weatherList)
+    {
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                adapter.setData(weatherList);
+                adapter.notifyDataSetChanged();
+
+                if(weatherList == null || weatherList.size() == 0)
+                {
+                    recyclerView.setVisibility(View.INVISIBLE);
+                    infoTextView.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    infoTextView.setVisibility(View.INVISIBLE);
+                }
+
+                adapter.setData(weatherList);
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void startSync()
@@ -203,19 +227,7 @@ public class MainActivity extends AppCompatActivity implements OnProgressSyncCha
             super.onPostExecute(weatherList);
             swipeRefreshLayout.setRefreshing(false);
 
-            if(weatherList == null || weatherList.size() == 0)
-            {
-                recyclerView.setVisibility(View.INVISIBLE);
-                infoTextView.setVisibility(View.VISIBLE);
-            }
-            else
-            {
-                recyclerView.setVisibility(View.VISIBLE);
-                infoTextView.setVisibility(View.INVISIBLE);
-            }
-
-            adapter.setData(weatherList);
-            adapter.notifyDataSetChanged();
+            updateUI(weatherList);
 
             isSyncNow = false;
             onProgressSyncChange((double)progressBar.getMax());
